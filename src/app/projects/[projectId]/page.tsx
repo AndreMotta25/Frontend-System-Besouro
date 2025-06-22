@@ -150,10 +150,6 @@ const ProjectsDescription = () => {
   );
 };
 
-export async function generateStaticParams() {
-  return projects.map((project) => ({
-    projectId: project.projectId,
-  }));
-}
+
 
 export default ProjectsPageId;
