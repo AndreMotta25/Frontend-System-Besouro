@@ -335,7 +335,7 @@ const ClassDiary = ({ params }: { params: { projectId: string; classId: string }
                         Aluno
                       </th>
                       {classData.customDates.map((customDate) => (
-                        <th key={customDate.id} className="border border-gray-300 dark:border-gray-600 p-3 text-center font-medium text-gray-900 dark:text-white min-w-[120px]">
+                        <th key={customDate.id} className="border border-gray-300 dark:border-gray-600 p-3 text-center font-medium text-gray-900 dark:text-white min-w-[120px] group">
                           <div className="flex flex-col items-center">
                             <div className="flex items-center gap-1 mb-1">
                               <span className="text-sm font-medium">
@@ -343,7 +343,7 @@ const ClassDiary = ({ params }: { params: { projectId: string; classId: string }
                               </span>
                               <button
                                 onClick={() => deleteCustomDate(customDate.id)}
-                                className="text-red-500 hover:text-red-700 p-1"
+                                className="text-red-500 hover:text-red-700 p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
                                 title="Excluir data"
                               >
                                 <X size={14} />
