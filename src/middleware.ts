@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const publicRoutes = ["/login", "/forget-password","/register"];
+const publicRoutes = ["/login", "/forget-password", "/register", "/projects"];
 const isPublicRoute = (pathname: string) => {
   return publicRoutes.some((publicPath: string) =>
-    pathname.startsWith(publicPath)
+    pathname.startsWith(publicPath),
   );
 };
 
