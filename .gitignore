@@ -1,0 +1,47 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env*.local
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+/.idea/
+/src/app/.sass-cache/
+/src/app/globals.css
+/src/app/globals.css.map
+/src/styles/GlobalVariables.css
+/src/styles/GlobalVariables.css.map
+/src/styles/.sass-cache/2e636d5a67de10aafa3c3a7f0b69473bf1170427/GlobalVariables.scssc
+/src/styles/SideMenu.css
+/src/styles/SideMenu.css.map
+/src/styles/.sass-cache/2e636d5a67de10aafa3c3a7f0b69473bf1170427/SideMenu.scssc
+/dump.json

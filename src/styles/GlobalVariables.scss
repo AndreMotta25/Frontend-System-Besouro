@@ -1,0 +1,27 @@
+$bgDefault: #f7f8fa;
+$bgDefaultDark: #0a1118;
+$bettleOrange: #FAA61A;
+
+::-webkit-scrollbar {
+    width: 8px; /* Largura do scroll */
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background-color: #ccc; /* Cor do thumb no modo claro */
+    border-radius: 10px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: transparent; /* Cor do track no modo claro */
+  }
+  
+  /* Modo escuro */
+  .dark {
+    ::-webkit-scrollbar-thumb {
+      background-color: #555; /* Cor do thumb no modo escuro */
+    }
+  
+    ::-webkit-scrollbar-track {
+      background: transparent; /* Cor do track no modo escuro */
+    }
+  }

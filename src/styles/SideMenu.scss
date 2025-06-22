@@ -1,0 +1,28 @@
+@import "../styles/GlobalVariables.scss";
+
+.side-menu-width {
+  width: 3.5rem !important;
+}
+
+.side-menu-width button {
+  margin-left: 0 !important;
+  justify-content: center;
+}
+
+.side-menu-button.active {
+  background-color: $bettleOrange !important;
+  color: #000 !important;
+}
+
+.side-menu-button {
+  &.active {
+    background-color: $bettleOrange !important;
+    color: #000 !important;
+
+    .side-menu-icon,
+    .side-menu-button-text,
+    .side-menu-arrow {
+      color: white !important;
+    }
+  }
+}

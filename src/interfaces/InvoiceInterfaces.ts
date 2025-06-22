@@ -1,0 +1,33 @@
+export interface IInvoice {
+  amount: string;
+  amountNumber: string;
+  cfOp: string;
+  corporateReason: string;
+  documentIdentifier: string;
+  emissionDate: string;
+  entryExit: string;
+  entryExitDate: string;
+  entryExitTime: string;
+  freightModality: string;
+  grossWeight: string;
+  ieTaxSubtitle: string;
+  liquidWeight: string;
+  mark: string;
+  model: string;
+  natureOperation: string;
+  nfNumber: string;
+  series: string;
+  species: string;
+  subSeries: string;
+  taxId: string;
+  transportAddress: string;
+  transportCity: string;
+  transportCnpj: string;
+  transportCorporateReason: string;
+  transportDocumentIdentifier: string;
+  transportStateCode: string;
+  vehicleLisensePlate: string;
+  _corporateReason: string;
+  _documentIdentifier: string;
+  _taxId: string;
+}
