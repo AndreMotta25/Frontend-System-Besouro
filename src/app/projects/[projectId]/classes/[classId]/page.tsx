@@ -4,7 +4,7 @@
 import { useState } from "react";
 import PageLayout from "@/app/pageLayout";
 import { Button } from "@/components/UI/button";
-import { Plus, UserCheck, UserX, Edit, Calendar, Eye } from "lucide-react";
+import { Plus, UserCheck, UserX, Edit, Calendar, Trash2, X } from "lucide-react";
 import AddStudentModal from "@/components/Modals/AddStudentModal";
 
 interface Student {
@@ -13,6 +13,12 @@ interface Student {
   email: string;
   phone: string;
   attendance: Record<string, boolean>; // date -> isPresent
+}
+
+interface CustomDate {
+  id: string;
+  label: string;
+  date: string;
 }
 
 interface ClassData {
@@ -24,34 +30,17 @@ interface ClassData {
   status: string;
   teacher: string;
   students: Student[];
+  customDates: CustomDate[];
 }
 
 const ClassDiary = ({ params }: { params: { projectId: string; classId: string } }) => {
   const { projectId, classId } = params;
   
-  // Generate 5 consecutive weekdays starting from today
-  const generateWeekdays = () => {
-    const days = [];
-    const today = new Date();
-    let currentDay = new Date(today);
-    
-    // Find the start of the current week (Monday)
-    const dayOfWeek = currentDay.getDay();
-    const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
-    currentDay.setDate(currentDay.getDate() + mondayOffset);
-    
-    // Generate 5 weekdays
-    for (let i = 0; i < 5; i++) {
-      days.push(new Date(currentDay));
-      currentDay.setDate(currentDay.getDate() + 1);
-    }
-    return days;
-  };
-
-  const weekdays = generateWeekdays();
   const [viewMode, setViewMode] = useState<'sheet' | 'summary'>('sheet');
+  const [newDateLabel, setNewDateLabel] = useState("");
+  const [newDateValue, setNewDateValue] = useState("");
   
-  // Mock data with attendance for each day
+  // Mock data with custom dates
   const [classData, setClassData] = useState<ClassData>({
     classId: "T848",
     address: "Rua Augusta, 123 - São Paulo, SP",
@@ -60,6 +49,13 @@ const ClassDiary = ({ params }: { params: { projectId: string; classId: string }
     presenceList: "ZL",
     status: "confirmado",
     teacher: "Prof. Maria Silva",
+    customDates: [
+      { id: "1", label: "Aula 1", date: "2024-01-15" },
+      { id: "2", label: "Aula 2", date: "2024-01-22" },
+      { id: "3", label: "Aula 3", date: "2024-01-29" },
+      { id: "4", label: "Prova 1", date: "2024-02-05" },
+      { id: "5", label: "Aula 4", date: "2024-02-12" },
+    ],
     students: [
       { 
         id: "1", 
@@ -67,11 +63,11 @@ const ClassDiary = ({ params }: { params: { projectId: string; classId: string }
         email: "joao@email.com", 
         phone: "(11) 99999-9999", 
         attendance: {
-          [weekdays[0].toISOString().split('T')[0]]: true,
-          [weekdays[1].toISOString().split('T')[0]]: true,
-          [weekdays[2].toISOString().split('T')[0]]: false,
-          [weekdays[3].toISOString().split('T')[0]]: true,
-          [weekdays[4].toISOString().split('T')[0]]: true,
+          "1": true,
+          "2": true,
+          "3": false,
+          "4": true,
+          "5": true,
         }
       },
       { 
@@ -80,11 +76,11 @@ const ClassDiary = ({ params }: { params: { projectId: string; classId: string }
         email: "maria@email.com", 
         phone: "(11) 88888-8888", 
         attendance: {
-          [weekdays[0].toISOString().split('T')[0]]: false,
-          [weekdays[1].toISOString().split('T')[0]]: true,
-          [weekdays[2].toISOString().split('T')[0]]: true,
-          [weekdays[3].toISOString().split('T')[0]]: false,
-          [weekdays[4].toISOString().split('T')[0]]: true,
+          "1": false,
+          "2": true,
+          "3": true,
+          "4": false,
+          "5": true,
         }
       },
       { 
@@ -93,11 +89,11 @@ const ClassDiary = ({ params }: { params: { projectId: string; classId: string }
         email: "pedro@email.com", 
         phone: "(11) 77777-7777", 
         attendance: {
-          [weekdays[0].toISOString().split('T')[0]]: true,
-          [weekdays[1].toISOString().split('T')[0]]: true,
-          [weekdays[2].toISOString().split('T')[0]]: true,
-          [weekdays[3].toISOString().split('T')[0]]: true,
-          [weekdays[4].toISOString().split('T')[0]]: false,
+          "1": true,
+          "2": true,
+          "3": true,
+          "4": true,
+          "5": false,
         }
       },
       { 
@@ -106,11 +102,11 @@ const ClassDiary = ({ params }: { params: { projectId: string; classId: string }
         email: "ana@email.com", 
         phone: "(11) 66666-6666", 
         attendance: {
-          [weekdays[0].toISOString().split('T')[0]]: true,
-          [weekdays[1].toISOString().split('T')[0]]: false,
-          [weekdays[2].toISOString().split('T')[0]]: false,
-          [weekdays[3].toISOString().split('T')[0]]: true,
-          [weekdays[4].toISOString().split('T')[0]]: true,
+          "1": true,
+          "2": false,
+          "3": false,
+          "4": true,
+          "5": true,
         }
       },
     ]
@@ -118,7 +114,7 @@ const ClassDiary = ({ params }: { params: { projectId: string; classId: string }
 
   const [isAddStudentModalOpen, setIsAddStudentModalOpen] = useState(false);
 
-  const toggleAttendance = (studentId: string, date: string) => {
+  const toggleAttendance = (studentId: string, dateId: string) => {
     setClassData(prev => ({
       ...prev,
       students: prev.students.map(student =>
@@ -127,7 +123,7 @@ const ClassDiary = ({ params }: { params: { projectId: string; classId: string }
               ...student, 
               attendance: {
                 ...student.attendance,
-                [date]: !student.attendance[date]
+                [dateId]: !student.attendance[dateId]
               }
             }
           : student
@@ -139,15 +135,62 @@ const ClassDiary = ({ params }: { params: { projectId: string; classId: string }
     const newStudent: Student = {
       id: Date.now().toString(),
       ...studentData,
-      attendance: weekdays.reduce((acc, day) => ({
+      attendance: classData.customDates.reduce((acc, date) => ({
         ...acc,
-        [day.toISOString().split('T')[0]]: false
+        [date.id]: false
       }), {})
     };
     
     setClassData(prev => ({
       ...prev,
       students: [...prev.students, newStudent]
+    }));
+  };
+
+  const deleteStudent = (studentId: string) => {
+    setClassData(prev => ({
+      ...prev,
+      students: prev.students.filter(student => student.id !== studentId)
+    }));
+  };
+
+  const addCustomDate = () => {
+    if (newDateLabel.trim() && newDateValue.trim()) {
+      const newDate: CustomDate = {
+        id: Date.now().toString(),
+        label: newDateLabel.trim(),
+        date: newDateValue
+      };
+      
+      setClassData(prev => ({
+        ...prev,
+        customDates: [...prev.customDates, newDate],
+        students: prev.students.map(student => ({
+          ...student,
+          attendance: {
+            ...student.attendance,
+            [newDate.id]: false
+          }
+        }))
+      }));
+      
+      setNewDateLabel("");
+      setNewDateValue("");
+    }
+  };
+
+  const deleteCustomDate = (dateId: string) => {
+    setClassData(prev => ({
+      ...prev,
+      customDates: prev.customDates.filter(date => date.id !== dateId),
+      students: prev.students.map(student => {
+        const newAttendance = { ...student.attendance };
+        delete newAttendance[dateId];
+        return {
+          ...student,
+          attendance: newAttendance
+        };
+      })
     }));
   };
 
@@ -161,16 +204,12 @@ const ClassDiary = ({ params }: { params: { projectId: string; classId: string }
     return { totalDays, presentDays, absentDays, attendanceRate };
   };
 
-  const formatDate = (date: Date) => {
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
     return date.toLocaleDateString('pt-BR', { 
-      weekday: 'short', 
       day: '2-digit', 
       month: '2-digit' 
     });
-  };
-
-  const getDayName = (date: Date) => {
-    return date.toLocaleDateString('pt-BR', { weekday: 'short' }).replace('.', '');
   };
 
   return (
@@ -205,6 +244,45 @@ const ClassDiary = ({ params }: { params: { projectId: string; classId: string }
                   {classData.status}
                 </span>
               </div>
+            </div>
+          </div>
+
+          {/* Add Custom Date */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+              Adicionar Nova Data
+            </h3>
+            <div className="flex gap-4 items-end">
+              <div className="flex-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Nome da Aula/Evento
+                </label>
+                <input
+                  type="text"
+                  value={newDateLabel}
+                  onChange={(e) => setNewDateLabel(e.target.value)}
+                  placeholder="Ex: Aula 1, Prova Final, etc."
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-orangeSupport dark:bg-gray-700 dark:text-white"
+                />
+              </div>
+              <div className="flex-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Data
+                </label>
+                <input
+                  type="date"
+                  value={newDateValue}
+                  onChange={(e) => setNewDateValue(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-orangeSupport dark:bg-gray-700 dark:text-white"
+                />
+              </div>
+              <Button
+                onClick={addCustomDate}
+                disabled={!newDateLabel.trim() || !newDateValue.trim()}
+                className="bg-orangeSupport hover:bg-orangeSupport/90"
+              >
+                Adicionar
+              </Button>
             </div>
           </div>
 
@@ -256,20 +334,32 @@ const ClassDiary = ({ params }: { params: { projectId: string; classId: string }
                       <th className="border border-gray-300 dark:border-gray-600 p-3 text-left font-medium text-gray-900 dark:text-white">
                         Aluno
                       </th>
-                      {weekdays.map((day, index) => (
-                        <th key={index} className="border border-gray-300 dark:border-gray-600 p-3 text-center font-medium text-gray-900 dark:text-white min-w-[100px]">
-                          <div className="flex flex-col">
+                      {classData.customDates.map((customDate) => (
+                        <th key={customDate.id} className="border border-gray-300 dark:border-gray-600 p-3 text-center font-medium text-gray-900 dark:text-white min-w-[120px]">
+                          <div className="flex flex-col items-center">
+                            <div className="flex items-center gap-1 mb-1">
+                              <span className="text-sm font-medium">
+                                {customDate.label}
+                              </span>
+                              <button
+                                onClick={() => deleteCustomDate(customDate.id)}
+                                className="text-red-500 hover:text-red-700 p-1"
+                                title="Excluir data"
+                              >
+                                <X size={14} />
+                              </button>
+                            </div>
                             <span className="text-xs text-gray-500 dark:text-gray-400">
-                              {getDayName(day)}
-                            </span>
-                            <span className="text-sm">
-                              {day.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}
+                              {formatDate(customDate.date)}
                             </span>
                           </div>
                         </th>
                       ))}
                       <th className="border border-gray-300 dark:border-gray-600 p-3 text-center font-medium text-gray-900 dark:text-white">
                         Total
+                      </th>
+                      <th className="border border-gray-300 dark:border-gray-600 p-3 text-center font-medium text-gray-900 dark:text-white">
+                        Ações
                       </th>
                     </tr>
                   </thead>
@@ -288,13 +378,12 @@ const ClassDiary = ({ params }: { params: { projectId: string; classId: string }
                               </div>
                             </div>
                           </td>
-                          {weekdays.map((day, index) => {
-                            const dateStr = day.toISOString().split('T')[0];
-                            const isPresent = student.attendance[dateStr];
+                          {classData.customDates.map((customDate) => {
+                            const isPresent = student.attendance[customDate.id];
                             return (
-                              <td key={index} className="border border-gray-300 dark:border-gray-600 p-3 text-center">
+                              <td key={customDate.id} className="border border-gray-300 dark:border-gray-600 p-3 text-center">
                                 <button
-                                  onClick={() => toggleAttendance(student.id, dateStr)}
+                                  onClick={() => toggleAttendance(student.id, customDate.id)}
                                   className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-colors ${
                                     isPresent 
                                       ? 'bg-green-500 border-green-500 text-white' 
@@ -315,6 +404,15 @@ const ClassDiary = ({ params }: { params: { projectId: string; classId: string }
                                 {stats.absentDays}F
                               </div>
                             </div>
+                          </td>
+                          <td className="border border-gray-300 dark:border-gray-600 p-3 text-center">
+                            <button
+                              onClick={() => deleteStudent(student.id)}
+                              className="text-red-500 hover:text-red-700 p-1"
+                              title="Excluir aluno"
+                            >
+                              <Trash2 size={16} />
+                            </button>
                           </td>
                         </tr>
                       );
@@ -370,6 +468,13 @@ const ClassDiary = ({ params }: { params: { projectId: string; classId: string }
                               style={{ width: `${stats.attendanceRate}%` }}
                             />
                           </div>
+                          <button
+                            onClick={() => deleteStudent(student.id)}
+                            className="text-red-500 hover:text-red-700 p-2"
+                            title="Excluir aluno"
+                          >
+                            <Trash2 size={18} />
+                          </button>
                         </div>
                       </div>
                     </div>
