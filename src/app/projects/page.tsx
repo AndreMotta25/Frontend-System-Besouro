@@ -34,18 +34,19 @@ const ProjectsCardsArea = () => {
     setEditingProject({
       id: project.projectId,
       name: project.name,
-      description: project.description || "Descrição do projeto" // Fallback caso não tenha descrição
+      description: project.description || "Descrição do projeto", // Fallback caso não tenha descrição
+      logo: project.projectLogo || ""
     });
     setIsCreateModalOpen(true);
   };
 
-  const handleSaveProject = (name: string, description: string) => {
+  const handleSaveProject = (name: string, description: string, logo?: string) => {
     if (editingProject) {
       // Lógica para editar projeto existente
-      console.log("Editando projeto:", { id: editingProject.id, name, description });
+      console.log("Editando projeto:", { id: editingProject.id, name, description, logo });
     } else {
       // Lógica para criar novo projeto
-      console.log("Novo projeto:", { name, description });
+      console.log("Novo projeto:", { name, description, logo });
     }
     // Por exemplo, fazer uma chamada à API ou atualizar o estado
   };

@@ -9,11 +9,12 @@ import { Button } from "../UI/button";
 interface CreateProjectModalProps {
   isOpen: boolean;
   onOpenChange: () => void;
-  onSave: (name: string, description: string) => void;
+  onSave: (name: string, description: string, logo?: string) => void;
   editMode?: boolean;
   initialData?: {
     name: string;
     description: string;
+    logo?: string;
   };
 }
 
@@ -26,23 +27,27 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
 }) => {
   const [projectName, setProjectName] = useState(initialData?.name || "");
   const [projectDescription, setProjectDescription] = useState(initialData?.description || "");
+  const [projectLogo, setProjectLogo] = useState(initialData?.logo || "");
 
   // Atualizar estados quando initialData mudar
   React.useEffect(() => {
     if (initialData) {
       setProjectName(initialData.name);
       setProjectDescription(initialData.description);
+      setProjectLogo(initialData.logo || "");
     } else {
       setProjectName("");
       setProjectDescription("");
+      setProjectLogo("");
     }
   }, [initialData]);
 
   const handleSave = () => {
     if (projectName.trim() && projectDescription.trim()) {
-      onSave(projectName, projectDescription);
+      onSave(projectName, projectDescription, projectLogo);
       setProjectName("");
       setProjectDescription("");
+      setProjectLogo("");
       onOpenChange();
     }
   };
@@ -50,6 +55,7 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
   const handleCancel = () => {
     setProjectName("");
     setProjectDescription("");
+    setProjectLogo("");
     onOpenChange();
   };
 
@@ -69,6 +75,14 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
           onChange={(e) => setProjectName(e.target.value)}
           type="text"
           required
+        />
+
+        <FloatLabelInput
+          label="Logo do Projeto (URL)"
+          value={projectLogo}
+          onChange={(e) => setProjectLogo(e.target.value)}
+          type="url"
+          placeholder="https://exemplo.com/logo.png"
         />
         
         <div className="flex flex-col gap-2">
