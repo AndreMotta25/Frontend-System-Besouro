@@ -10,15 +10,33 @@ interface CreateProjectModalProps {
   isOpen: boolean;
   onOpenChange: () => void;
   onSave: (name: string, description: string) => void;
+  editMode?: boolean;
+  initialData?: {
+    name: string;
+    description: string;
+  };
 }
 
 const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
   isOpen,
   onOpenChange,
   onSave,
+  editMode = false,
+  initialData,
 }) => {
-  const [projectName, setProjectName] = useState("");
-  const [projectDescription, setProjectDescription] = useState("");
+  const [projectName, setProjectName] = useState(initialData?.name || "");
+  const [projectDescription, setProjectDescription] = useState(initialData?.description || "");
+
+  // Atualizar estados quando initialData mudar
+  React.useEffect(() => {
+    if (initialData) {
+      setProjectName(initialData.name);
+      setProjectDescription(initialData.description);
+    } else {
+      setProjectName("");
+      setProjectDescription("");
+    }
+  }, [initialData]);
 
   const handleSave = () => {
     if (projectName.trim() && projectDescription.trim()) {
@@ -39,7 +57,7 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
     <ShadModalLayout
       isOpen={isOpen}
       onOpenChange={handleCancel}
-      title="Criar Novo Projeto"
+      title={editMode ? "Editar Projeto" : "Criar Novo Projeto"}
       editMode={true}
       width="w-[500px]"
       onSave={handleSave}
@@ -75,7 +93,7 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
             disabled={!projectName.trim() || !projectDescription.trim()}
             className="bg-orangeSupport hover:bg-orangeSupport/90"
           >
-            Criar Projeto
+            {editMode ? "Salvar Alterações" : "Criar Projeto"}
           </Button>
         </div>
       </div>

@@ -6,13 +6,14 @@ import React from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { BesouroIcon } from "@/icons/BesouroIcon";
 import { IProjectCard } from "@/interfaces/ProjectsInterface";
-import { DollarSign } from "lucide-react";
+import { DollarSign, Edit3 } from "lucide-react";
 
 interface ProjectsCardProps {
   project: IProjectCard;
+  onEdit?: (project: IProjectCard) => void;
 }
 
-const ProjectsCard: React.FC<ProjectsCardProps> = ({ project }) => {
+const ProjectsCard: React.FC<ProjectsCardProps> = ({ project, onEdit }) => {
   const defaultProjectStatus: number = project.progressValue;
   const path = usePathname();
 
@@ -70,7 +71,18 @@ const ProjectsCard: React.FC<ProjectsCardProps> = ({ project }) => {
         path !== "/projects" ? "bg-black/70" : "bg-[#033745]"
       } shadow-2xl dark:bg-gray-800 flex flex-col justify-between rounded-3xl mt-12`}
     >
-      <div className="project-banner flex justify-center items-center w-full rounded-t-3xl h-3/5 bg-white dark:bg-gray-900">
+      <div className="project-banner flex justify-center items-center w-full rounded-t-3xl h-3/5 bg-white dark:bg-gray-900 relative">
+        {onEdit && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onEdit(project);
+            }}
+            className="absolute top-2 right-2 p-2 bg-white/80 hover:bg-white rounded-full shadow-md transition-all duration-200 z-10"
+          >
+            <Edit3 className="w-4 h-4 text-gray-600 hover:text-gray-800" />
+          </button>
+        )}
         {project.projectLogo != null ? (
           <img
             className="max-w-56 max-h-60 rounded-t-3xl select-none"

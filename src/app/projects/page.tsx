@@ -18,19 +18,36 @@ const ProjectsPage = () => {
 
 const ProjectsCardsArea = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [editingProject, setEditingProject] = useState<any>(null);
 
   const handleOpenCreateModal = () => {
+    setEditingProject(null);
     setIsCreateModalOpen(true);
   };
 
   const handleCloseCreateModal = () => {
     setIsCreateModalOpen(false);
+    setEditingProject(null);
   };
 
-  const handleCreateProject = (name: string, description: string) => {
-    // Aqui você pode implementar a lógica para salvar o projeto
-    console.log("Novo projeto:", { name, description });
-    // Por exemplo, fazer uma chamada à API ou adicionar ao estado
+  const handleEditProject = (project: any) => {
+    setEditingProject({
+      id: project.projectId,
+      name: project.name,
+      description: project.description || "Descrição do projeto" // Fallback caso não tenha descrição
+    });
+    setIsCreateModalOpen(true);
+  };
+
+  const handleSaveProject = (name: string, description: string) => {
+    if (editingProject) {
+      // Lógica para editar projeto existente
+      console.log("Editando projeto:", { id: editingProject.id, name, description });
+    } else {
+      // Lógica para criar novo projeto
+      console.log("Novo projeto:", { name, description });
+    }
+    // Por exemplo, fazer uma chamada à API ou atualizar o estado
   };
 
   return (
@@ -48,14 +65,23 @@ const ProjectsCardsArea = () => {
 
       <div className="grid md:grid-cols-4 grid-cols-1 gap-4">
         {projects.map((projeto, index) => (
-          <ProjectsCard project={projeto} key={index} />
+          <ProjectsCard 
+            project={projeto} 
+            key={index} 
+            onEdit={handleEditProject}
+          />
         ))}
       </div>
 
       <CreateProjectModal
         isOpen={isCreateModalOpen}
         onOpenChange={handleCloseCreateModal}
-        onSave={handleCreateProject}
+        onSave={handleSaveProject}
+        editMode={!!editingProject}
+        initialData={editingProject ? {
+          name: editingProject.name,
+          description: editingProject.description
+        } : undefined}
       />
     </div>
   );
