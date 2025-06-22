@@ -104,7 +104,7 @@ const ClassCard: React.FC<ClassCardProps> = ({
         </div>
 
         <div className="flex flex-row justify-between items-center">
-          <a href="#" className="group">
+          <a href={`/projects/1/classes/${classId}`} className="group">
             <button className="border transition ease-in-out delay-75 group-hover:bg-bgHouverOrange group-hover:-translate-y-2   hover:text-white border-bgHouverOrange rounded-full w-44 h-9 justify-between">
               <label className="text-xs">Lista de presença</label>
             </button>
