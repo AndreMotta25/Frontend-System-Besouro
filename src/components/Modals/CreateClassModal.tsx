@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState } from "react";
@@ -17,6 +16,7 @@ interface CreateClassModalProps {
     startTime: string;
     endTime: string;
     address: string;
+    responsible: string;
   }) => void;
 }
 
@@ -31,6 +31,7 @@ const CreateClassModal: React.FC<CreateClassModalProps> = ({
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [address, setAddress] = useState("");
+  const [responsible, setResponsible] = useState("");
 
   const statusOptions = [
     { value: "confirmado", label: "Confirmado" },
@@ -40,7 +41,15 @@ const CreateClassModal: React.FC<CreateClassModalProps> = ({
   ];
 
   const handleSave = () => {
-    if (className.trim() && classDate && classStatus && startTime && endTime && address.trim()) {
+    if (
+      className.trim() &&
+      classDate &&
+      classStatus &&
+      startTime &&
+      endTime &&
+      responsible &&
+      address.trim()
+    ) {
       onSave({
         name: className,
         date: classDate,
@@ -48,6 +57,7 @@ const CreateClassModal: React.FC<CreateClassModalProps> = ({
         startTime,
         endTime,
         address,
+        responsible,
       });
       // Limpar formulário
       setClassName("");
@@ -57,6 +67,7 @@ const CreateClassModal: React.FC<CreateClassModalProps> = ({
       setEndTime("");
       setAddress("");
       onOpenChange();
+      setResponsible("");
     }
   };
 
@@ -68,9 +79,17 @@ const CreateClassModal: React.FC<CreateClassModalProps> = ({
     setEndTime("");
     setAddress("");
     onOpenChange();
+    setResponsible("");
   };
 
-  const isFormValid = className.trim() && classDate && classStatus && startTime && endTime && address.trim();
+  const isFormValid =
+    className.trim() &&
+    classDate &&
+    classStatus &&
+    startTime &&
+    endTime &&
+    responsible &&
+    address.trim();
 
   return (
     <ShadModalLayout
@@ -83,31 +102,39 @@ const CreateClassModal: React.FC<CreateClassModalProps> = ({
     >
       <div className="p-6 flex flex-col gap-4">
         <FloatLabelInput
-          label="Nome da Turma"
+          title="Nome da Turma"
+          idInput="className"
           value={className}
           onChange={(e) => setClassName(e.target.value)}
           type="text"
           required
         />
-
+        <FloatLabelInput
+          title="Responsável"
+          idInput="className"
+          value={className}
+          onChange={(e) => setClassName(e.target.value)}
+          type="text"
+          required
+        />
         <div className="flex gap-4">
           <div className="flex-1">
             <FloatLabelInput
-              label="Data"
+              title="Data"
+              idInput="classDate"
               value={classDate}
               onChange={(e) => setClassDate(e.target.value)}
               type="date"
               required
             />
           </div>
-          
+
           <div className="flex-1">
             <FloatLabelSelect
-              label="Status"
+              title="Status"
               value={classStatus}
               onChange={(e) => setClassStatus(e.target.value)}
               options={statusOptions}
-              required
             />
           </div>
         </div>
@@ -115,17 +142,19 @@ const CreateClassModal: React.FC<CreateClassModalProps> = ({
         <div className="flex gap-4">
           <div className="flex-1">
             <FloatLabelInput
-              label="Horário de Início"
+              title="Horário de Início"
+              idInput="startTime"
               value={startTime}
               onChange={(e) => setStartTime(e.target.value)}
               type="time"
               required
             />
           </div>
-          
+
           <div className="flex-1">
             <FloatLabelInput
-              label="Horário de Fim"
+              title="Horário de Fim"
+              idInput="endTime"
               value={endTime}
               onChange={(e) => setEndTime(e.target.value)}
               type="time"
@@ -151,7 +180,7 @@ const CreateClassModal: React.FC<CreateClassModalProps> = ({
           <Button variant="outline" onClick={handleCancel}>
             Cancelar
           </Button>
-          <Button 
+          <Button
             onClick={handleSave}
             disabled={!isFormValid}
             className="bg-orangeSupport hover:bg-orangeSupport/90"

@@ -4,8 +4,8 @@ interface FloatLabelProps {
   title: string;
   idInput: string;
   type: string;
-  width: string;
-  className: string;
+  width?: string;
+  className?: string;
   value?: any;
   onChange?: (e: any) => void;
   disabled?: boolean;
@@ -15,7 +15,9 @@ interface FloatLabelProps {
 }
 
 const FloatLabelInput = (props: FloatLabelProps) => {
-  const disabledStyle = props.disabled ? "bg-gray-300/40 cursor-not-allowed pr-12" : "";
+  const disabledStyle = props.disabled
+    ? "bg-gray-300/40 cursor-not-allowed pr-12"
+    : "";
 
   return (
     <>
@@ -32,7 +34,9 @@ const FloatLabelInput = (props: FloatLabelProps) => {
           minLength={props.minLength}
           required={props.required}
         />
-        {props?.disabled && <Lock className="absolute right-5 top-1/2 cursor-not-allowed -translate-y-1/2 text-gray-600"/>}
+        {props?.disabled && (
+          <Lock className="absolute right-5 top-1/2 cursor-not-allowed -translate-y-1/2 text-gray-600" />
+        )}
         <label
           htmlFor={props.idInput}
           className="absolute select-none cursor-text text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-0 origin-[0] bg-transparent px-2 peer-focus:px-2 peer-focus:text-[#EC671A] peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"

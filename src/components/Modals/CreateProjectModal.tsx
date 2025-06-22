@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState } from "react";
@@ -26,7 +25,9 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
   initialData,
 }) => {
   const [projectName, setProjectName] = useState(initialData?.name || "");
-  const [projectDescription, setProjectDescription] = useState(initialData?.description || "");
+  const [projectDescription, setProjectDescription] = useState(
+    initialData?.description || "",
+  );
   const [projectLogo, setProjectLogo] = useState(initialData?.logo || "");
 
   // Atualizar estados quando initialData mudar
@@ -70,7 +71,8 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
     >
       <div className="p-6 flex flex-col gap-4">
         <FloatLabelInput
-          label="Nome do Projeto"
+          title="Nome do Projeto"
+          idInput="projectName"
           value={projectName}
           onChange={(e) => setProjectName(e.target.value)}
           type="text"
@@ -78,13 +80,13 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
         />
 
         <FloatLabelInput
-          label="Logo do Projeto (URL)"
+          title="Logo do Projeto (URL)"
+          idInput="projectLogo"
           value={projectLogo}
           onChange={(e) => setProjectLogo(e.target.value)}
           type="url"
-          placeholder="https://exemplo.com/logo.png"
         />
-        
+
         <div className="flex flex-col gap-2">
           <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
             Descrição
@@ -102,7 +104,7 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
           <Button variant="outline" onClick={handleCancel}>
             Cancelar
           </Button>
-          <Button 
+          <Button
             onClick={handleSave}
             disabled={!projectName.trim() || !projectDescription.trim()}
             className="bg-orangeSupport hover:bg-orangeSupport/90"

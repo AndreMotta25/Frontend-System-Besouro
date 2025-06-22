@@ -23,6 +23,7 @@ const ProjectsPageId = ({ params }: any) => {
     startTime: string;
     endTime: string;
     address: string;
+    responsible: string;
   }) => {
     // Lógica para salvar a turma
     console.log("Nova turma criada:", classData);
@@ -39,7 +40,9 @@ const ProjectsPageId = ({ params }: any) => {
         }
       >
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold dark:text-white">Informações do Projeto</h2>
+          <h2 className="text-xl font-semibold dark:text-white">
+            Informações do Projeto
+          </h2>
           <Button
             onClick={() => setIsCreateClassModalOpen(true)}
             className="bg-orangeSupport hover:bg-orangeSupport/90 flex items-center gap-2"
@@ -130,7 +133,6 @@ const ProjectsDescription = () => {
           <div className="md:w-3/5 flex items-center dark:text-white rounded-xl">
             <MixedBarLine />
           </div>
-          
         </div>
         <div className="md:w-2/6 justify-center dark:text-white rounded-xl shadow-xl  p-3 ">
           <span>Equipe</span>
@@ -149,7 +151,5 @@ const ProjectsDescription = () => {
     </>
   );
 };
-
-
 
 export default ProjectsPageId;
