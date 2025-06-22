@@ -1,15 +1,33 @@
-// "use client"
+"use client";
 
+import { useState } from "react";
 import ProjetctLayout from "./projectLayout";
 import CollaboratorCard from "@/components/Collaborator/CollaboratorCard";
 import MixedBarLine from "@/components/charts/MixedBarLine";
 import RadialBar from "@/components/charts/RadialBar";
+import CreateClassModal from "@/components/Modals/CreateClassModal";
+import { Button } from "@/components/UI/button";
+import { Plus } from "lucide-react";
 import { projects } from "@/components/constants/data";
 
 const ProjectsPageId = ({ params }: any) => {
   const { projectId } = params;
+  const [isCreateClassModalOpen, setIsCreateClassModalOpen] = useState(false);
 
   const project = projects.find((p) => p.projectId === projectId);
+
+  const handleSaveClass = (classData: {
+    name: string;
+    date: string;
+    status: string;
+    startTime: string;
+    endTime: string;
+    address: string;
+  }) => {
+    // Lógica para salvar a turma
+    console.log("Nova turma criada:", classData);
+    // Aqui você pode fazer uma chamada à API ou atualizar o estado
+  };
 
   return (
     <>
@@ -20,8 +38,24 @@ const ProjectsPageId = ({ params }: any) => {
           project?.secondAccentColor ? project?.secondAccentColor : "f"
         }
       >
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold dark:text-white">Informações do Projeto</h2>
+          <Button
+            onClick={() => setIsCreateClassModalOpen(true)}
+            className="bg-orangeSupport hover:bg-orangeSupport/90 flex items-center gap-2"
+          >
+            <Plus size={16} />
+            Criar Turma
+          </Button>
+        </div>
         {ProjectsDescription()}
       </ProjetctLayout>
+
+      <CreateClassModal
+        isOpen={isCreateClassModalOpen}
+        onOpenChange={() => setIsCreateClassModalOpen(false)}
+        onSave={handleSaveClass}
+      />
     </>
   );
 };
